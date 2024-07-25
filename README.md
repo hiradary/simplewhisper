@@ -3,3 +3,6 @@
 ### A simple speech-to-text transcription interface using OpenAI's Whisper API.
 
 See the [demo](https://simplewhisper.hiradary.me) here.
+
+https://github.com/user-attachments/assets/369c0685-97cd-49c9-81ab-a95aa15427dc
+
