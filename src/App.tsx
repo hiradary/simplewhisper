@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { CopyIcon, MicIcon } from "@/components/ui/icon";
+import logo from "@/assets/simplewhisper-logo.svg";
 import {
   Dialog,
   DialogContent,
@@ -14,9 +15,7 @@ import { toast, Toaster } from "sonner";
 
 export default function App() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [transcript, setTranscript] = useState<string>(
-    "Your transcription will be displayed here as you speak."
-  );
+  const [transcript, setTranscript] = useState<string>("");
   const [showApiKeyModal, setShowApiKeyModal] = useState<boolean>(false);
   const [apiKey, setApiKey] = useState<string>("");
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -119,8 +118,9 @@ export default function App() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground xl:py-10 py-4">
-      <div className="max-w-lg w-full space-y-6 px-4">
-        <div className="flex flex-col items-center justify-center space-y-2">
+      <div className="flex flex-col items-center max-w-lg w-full space-y-6 px-4 flex-1">
+        <img src={logo} className="w-80" />
+        <div className="flex flex-col items-center justify-center space-y-2 flex-1">
           <Button
             size="lg"
             className="flex items-center gap-2 px-6 py-3 rounded-full"
@@ -134,37 +134,49 @@ export default function App() {
               ? "Recording... Click to stop."
               : "Click to start recording."}
           </div>
+          {transcript && (
+            <div className="rounded-md p-4 text-card-foreground max-w-lg bg-gray-100">
+              <Button
+                variant="outline"
+                className="flex items-center text-muted-foreground hover:bg-muted/50 gap-2 mb-2"
+                onClick={copyTranscript}
+              >
+                <CopyIcon className="size-5" />
+                Copy
+              </Button>
+              <p className="w-full">{transcript}</p>
+            </div>
+          )}
         </div>
-        <div className="bg-card rounded-lg p-4 text-card-foreground">
-          <div className="prose max-w-none">
-            <p>{transcript}</p>
-          </div>
-          <div className="flex items-center justify-between mt-4">
-            <span className="text-gray-400 text-sm">
-              Made with ❤️ by
+        <div className="w-full flex flex-col mt-4 gap-2">
+          <div className="w-full flex items-center justify-center">
+            <span className="text-gray-400 text-xs">
+              Made with ❤️ by{" "}
               <a
                 href="https://x.com/hiradary"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:underline ml-1"
+                className="text-muted-foreground hover:underline"
               >
                 @hiradary
               </a>
+              . Fully{" "}
+              <a
+                href="https://github.com/hiradary/simplewhisper"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:underline"
+              >
+                open-source
+              </a>
+              .
             </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:bg-muted/50"
-              onClick={copyTranscript}
-            >
-              <CopyIcon className="w-5 h-5" />
-              <span className="sr-only">Copy transcription</span>
-            </Button>
           </div>
-        </div>
-        <div className="text-xs text-muted-foreground text-center text-gray-400">
-          Note: We do not store your OpenAI API key or audio recordings. Audio
-          is sent directly to OpenAI for transcription.
+
+          <div className="text-xs text-muted-foreground text-center text-gray-400">
+            We do not store your OpenAI API key or audio recordings. Audio is
+            sent directly to OpenAI for transcription.
+          </div>
         </div>
       </div>
       <Dialog open={showApiKeyModal} onOpenChange={setShowApiKeyModal}>
