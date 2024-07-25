@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { Analytics } from "@vercel/analytics/react";
 import { CopyIcon, MicIcon } from "@/components/ui/icon";
 import logo from "@/assets/simplewhisper-logo.svg";
 import {
@@ -198,6 +199,7 @@ export default function App() {
         </DialogContent>
       </Dialog>
       <Toaster />
+      <Analytics />
     </main>
   );
 }
