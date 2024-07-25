@@ -65,7 +65,7 @@ export default function App() {
         audioChunksRef.current = [];
       };
 
-      mediaRecorderRef.current.start();
+      mediaRecorderRef.current.start(isSafari ? 1000 : 0);
       setIsRecording(true);
     } catch (error) {
       console.error("Error accessing microphone:", error);
@@ -81,7 +81,7 @@ export default function App() {
 
   const sendAudioToWhisperAPI = async (audioBlob: Blob) => {
     const formData = new FormData();
-    formData.append("file", audioBlob, `audio.${isSafari ? "mp4" : "mp3"}`);
+    formData.append("file", audioBlob, `audio.mp3`);
     formData.append("model", "whisper-1");
 
     try {
