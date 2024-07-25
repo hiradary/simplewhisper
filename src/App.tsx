@@ -22,6 +22,8 @@ export default function App() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
   const handleApiKeySubmit = () => {
     if (apiKey) {
       localStorage.setItem("openai_api_key", apiKey);
@@ -57,7 +59,7 @@ export default function App() {
 
       mediaRecorderRef.current.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, {
-          type: "audio/wav",
+          type: isSafari ? "audio/mp4" : "audio/mp3",
         });
         sendAudioToWhisperAPI(audioBlob);
         audioChunksRef.current = [];
@@ -79,7 +81,7 @@ export default function App() {
 
   const sendAudioToWhisperAPI = async (audioBlob: Blob) => {
     const formData = new FormData();
-    formData.append("file", audioBlob, "audio.wav");
+    formData.append("file", audioBlob, `audio.${isSafari ? "mp4" : "mp3"}`);
     formData.append("model", "whisper-1");
 
     try {
@@ -199,7 +201,7 @@ export default function App() {
         </DialogContent>
       </Dialog>
       <Toaster />
-      <Analytics />
+      {import.meta.env.PROD && <Analytics />}
     </main>
   );
 }
